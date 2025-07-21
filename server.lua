@@ -14,6 +14,15 @@ RegisterNetEvent("wdev-platechange:server:change", function(netId, oldPlate, new
         return
     end
 
+    if GetResourceKvpString("claimed_" .. xPlayer.getIdentifier()) then
+        TriggerClientEvent("ox_lib:notify", src, {
+            title = "Error!",
+            description = "You have already used this.",
+            type = "inform"
+        })
+        return
+    end
+
     local vehicle = NetworkGetEntityFromNetworkId(netId)
 
     if not DoesEntityExist(vehicle) then
@@ -41,4 +50,6 @@ RegisterNetEvent("wdev-platechange:server:change", function(netId, oldPlate, new
         description = "Plate changed to " .. newPlate,
         type = "inform"
     })
+
+    SetResourceKvp("claimed_" .. xPlayer.getIdentifier(), 1)
 end)
